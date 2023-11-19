@@ -67,9 +67,11 @@ class Aluno{
             if (element.Id == idAluno) {
                 console.log('lista aluno: ', this.listaAlunos);
                 this.lstAlunos.splice(index, 1);
-                tbody.deleteRow();
+                tbody.deleteRow(0);
             }
         }
+        this.listaAlunos();
+
     }
 
     lerProdutos() {
