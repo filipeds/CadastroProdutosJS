@@ -32,6 +32,7 @@ class Aluno{
         } else {
             if (this.validaCampos(aluno)) {
                 this.adicionaItem(aluno);
+                this.criaNotificacao('success', 'fa-solid fa-circle-check', 'Sucesso', 'Aluno cadastrado com sucesso.');
             }
         }
 
@@ -70,8 +71,10 @@ class Aluno{
                 tbody.deleteRow(0);
             }
         }
+        this.criaNotificacao('success', 'fa-solid fa-circle-check', 'Sucesso', 'Aluno deletado com sucesso.');
+        this.apagaValores();
         this.listaAlunos();
-
+        
     }
 
     lerProdutos() {
@@ -98,25 +101,18 @@ class Aluno{
 
         for (let index = 0; index < this.lstAlunos.length; index++) {
             const element = this.lstAlunos[index];
-            if (aluno.nome == element.nome && aluno.cpf == element.cpf) {
-
-                msg += 'O aluno: ' + aluno.nome + ', já existe \n';
+            if (aluno.cpf == element.cpf) {
+                msg += 'Esse aluno já existe \n';
+                this.criaNotificacao('error', 'fa-solid fa-circle-exclamation', 'Erro', msg);
+                return false;
             }
         }
 
-        if(aluno.nome == '') {
-            msg += 'Informe o nome do aluno \n';
-        }
-
-        if(aluno.preco == '') {
-            msg += 'Informe o preço do aluno \n';
-        }
-
-        if (msg != '') {
-            alert(msg);
+        if(aluno.nome == '' || aluno.idade == '' || aluno.email == '' || aluno.cpf == '') {
+            msg += 'Insira todos os dados antes de continuar \n';
+            this.criaNotificacao('warning', 'fa-solid fa-circle-exclamation', 'Atenção', msg);
             return false;
         }
-
         return true;
     }
 
@@ -148,11 +144,11 @@ class Aluno{
             tdCpf.innerText =  element.cpf;
 
             let buttonEdit = document.createElement('img');
-            buttonEdit.src="images/edit.png" 
+            buttonEdit.src="images/button_edit.png" 
             buttonEdit.setAttribute("onclick", "aluno.editar("+element.Id+")");
 
             let buttonDell = document.createElement('img');
-            buttonDell.src="images/delete.png";
+            buttonDell.src="images/button_delete.png";
             buttonDell.setAttribute("onclick", "aluno.deletar("+element.Id+")");
     
             tdAcoes.appendChild(buttonEdit);
@@ -160,6 +156,25 @@ class Aluno{
 
         }
         
+    }
+
+    criaNotificacao(tipo, icon, titulo, texto) {
+        let novaNotificacao = document.createElement('div');
+        novaNotificacao.innerHTML = `
+        <div class="notificacao ${tipo}">
+            <i class="${icon}"></i>
+            <div class="conteudo">
+                <div class="titulo">${titulo}</div>
+                <span>${texto}</span>
+            </div>
+            <i class="fa-solid fa-xmark"
+            onclick="(this.parentElement).remove()"
+            ></i>
+        </div>`
+        document.querySelector('.notificacoes').appendChild(novaNotificacao);
+        novaNotificacao.timeOut = setTimeout(
+            ()=>novaNotificacao.remove(), 5000
+        )
     }
 
 }
